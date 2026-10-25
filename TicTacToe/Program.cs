@@ -4,14 +4,55 @@ class Program
 {
     static char[,] board = new char[3, 3];
 
-    static void Main()
+        static void Main()
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
-
         InitBoard();
         PrintBoard();
-    }
 
+        var (row1, col1) = ReadMove();
+        board[row1, col1] = 'X';
+        PrintBoard();
+
+        var (row2, col2) = ReadMove();
+        board[row2, col2] = 'O';
+        PrintBoard();
+    }
+    static (int row, int col) ReadMove()
+    {
+        while (true)
+        {
+            Console.Write("Введите строку и столбец через пробел (например, 2 3): ");
+
+            string[] parts = (Console.ReadLine() ?? "")
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length != 2 ||
+                !int.TryParse(parts[0], out int row) ||
+                !int.TryParse(parts[1], out int col))
+            {
+                Console.WriteLine("Ошибка: введите два числа через пробел.");
+                continue; 
+            }
+
+            if (row < 1 || row > 3 || col < 1 || col > 3)
+            {
+                Console.WriteLine("Ошибка: числа должны быть от 1 до 3.");
+                continue;
+            }
+
+            row--;
+            col--;
+
+            if (board[row, col] != ' ')
+            {
+                Console.WriteLine("Ошибка: эта клетка уже занята.");
+                continue;
+            }
+
+            return (row, col); // всё корректно
+        }
+    }
     static void InitBoard()
     {
         for (int r = 0; r < 3; r++)
