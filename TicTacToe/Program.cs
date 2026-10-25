@@ -4,11 +4,21 @@ class Program
 {
     static char[,] board = new char[3, 3];
 
-           static void Main()
+    static void Main()
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
-        InitBoard();
 
+        do
+        {
+            PlayGame();
+        } while (AskRestart());
+
+        Console.WriteLine("Спасибо за игру!");
+    }
+
+    static void PlayGame()
+    {
+        InitBoard();
         char currentPlayer = 'X';
 
         while (true)
@@ -23,69 +33,34 @@ class Program
             {
                 PrintBoard();
                 Console.WriteLine($"Победил игрок {currentPlayer}!");
-                break;
+                return;
             }
-                        if (IsDraw())
+
+            if (IsDraw())
             {
                 PrintBoard();
                 Console.WriteLine("Ничья!");
-                break;
+                return;
             }
 
             currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
         }
     }
-    static (int row, int col) ReadMove()
+
+    static bool AskRestart()
     {
         while (true)
         {
-            Console.Write("Введите строку и столбец через пробел (например, 2 3): ");
+            Console.Write("Сыграть ещё раз? (y/n): ");
+            string answer = (Console.ReadLine() ?? "").Trim().ToLower();
 
-            string[] parts = (Console.ReadLine() ?? "")
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (answer == "y") return true;
+            if (answer == "n") return false;
 
-            if (parts.Length != 2 ||
-                !int.TryParse(parts[0], out int row) ||
-                !int.TryParse(parts[1], out int col))
-            {
-                Console.WriteLine("Ошибка: введите два числа через пробел.");
-                continue; 
-            
-    static bool CheckWin(char p)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            if (board[i, 0] == p && board[i, 1] == p && board[i, 2] == p) return true;
-
-            if (board[0, i] == p && board[1, i] == p && board[2, i] == p) return true;
-        }
-
-        if (board[0, 0] == p && board[1, 1] == p && board[2, 2] == p) return true;
-
-        if (board[0, 2] == p && board[1, 1] == p && board[2, 0] == p) return true;
-
-        return false;
-    }
-            }
-
-            if (row < 1 || row > 3 || col < 1 || col > 3)
-            {
-                Console.WriteLine("Ошибка: числа должны быть от 1 до 3.");
-                continue;
-            }
-
-            row--;
-            col--;
-
-            if (board[row, col] != ' ')
-            {
-                Console.WriteLine("Ошибка: эта клетка уже занята.");
-                continue;
-            }
-
-            return (row, col); // всё корректно
+            Console.WriteLine("Введите y или n.");
         }
     }
+
     static void InitBoard()
     {
         for (int r = 0; r < 3; r++)
@@ -104,29 +79,64 @@ class Program
         }
         Console.WriteLine();
     }
-        // Возвращает true, если игрок p занял целую линию из трёх клеток
+
+    static (int row, int col) ReadMove()
+    {
+        while (true)
+        {
+            Console.Write("Введите строку и столбец через пробел (например, 2 3): ");
+
+            string[] parts = (Console.ReadLine() ?? "")
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length != 2 ||
+                !int.TryParse(parts[0], out int row) ||
+                !int.TryParse(parts[1], out int col))
+            {
+                Console.WriteLine("Ошибка: введите два числа через пробел.");
+                continue;
+            }
+
+            if (row < 1 || row > 3 || col < 1 || col > 3)
+            {
+                Console.WriteLine("Ошибка: числа должны быть от 1 до 3.");
+                continue;
+            }
+
+            row--;
+            col--;
+
+            if (board[row, col] != ' ')
+            {
+                Console.WriteLine("Ошибка: эта клетка уже занята.");
+                continue;
+            }
+
+            return (row, col);
+        }
+    }
+
     static bool CheckWin(char p)
     {
         for (int i = 0; i < 3; i++)
         {
             if (board[i, 0] == p && board[i, 1] == p && board[i, 2] == p) return true;
-
             if (board[0, i] == p && board[1, i] == p && board[2, i] == p) return true;
         }
 
         if (board[0, 0] == p && board[1, 1] == p && board[2, 2] == p) return true;
-
         if (board[0, 2] == p && board[1, 1] == p && board[2, 0] == p) return true;
 
         return false;
     }
+
     static bool IsDraw()
     {
         for (int r = 0; r < 3; r++)
             for (int c = 0; c < 3; c++)
                 if (board[r, c] == ' ')
-                    return false; 
+                    return false;
 
-        return true; 
+        return true;
     }
 }
