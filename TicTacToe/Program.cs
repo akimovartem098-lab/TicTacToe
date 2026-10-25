@@ -19,6 +19,13 @@ class Program
             var (row, col) = ReadMove();
             board[row, col] = currentPlayer;
 
+            if (CheckWin(currentPlayer))
+            {
+                PrintBoard();
+                Console.WriteLine($"Победил игрок {currentPlayer}!");
+                break;
+            }
+
             currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
         }
     }
@@ -37,6 +44,26 @@ class Program
             {
                 Console.WriteLine("Ошибка: введите два числа через пробел.");
                 continue; 
+            
+    static bool CheckWin(char p)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            // i-я строка целиком
+            if (board[i, 0] == p && board[i, 1] == p && board[i, 2] == p) return true;
+
+            // i-й столбец целиком
+            if (board[0, i] == p && board[1, i] == p && board[2, i] == p) return true;
+        }
+
+        // Главная диагональ (сверху-слева вниз-вправо)
+        if (board[0, 0] == p && board[1, 1] == p && board[2, 2] == p) return true;
+
+        // Побочная диагональ (сверху-справа вниз-влево)
+        if (board[0, 2] == p && board[1, 1] == p && board[2, 0] == p) return true;
+
+        return false;
+    }
             }
 
             if (row < 1 || row > 3 || col < 1 || col > 3)
@@ -74,5 +101,21 @@ class Program
             if (r < 2) Console.WriteLine("   ---+---+---");
         }
         Console.WriteLine();
+    }
+        // Возвращает true, если игрок p занял целую линию из трёх клеток
+    static bool CheckWin(char p)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (board[i, 0] == p && board[i, 1] == p && board[i, 2] == p) return true;
+
+            if (board[0, i] == p && board[1, i] == p && board[2, i] == p) return true;
+        }
+
+        if (board[0, 0] == p && board[1, 1] == p && board[2, 2] == p) return true;
+
+        if (board[0, 2] == p && board[1, 1] == p && board[2, 0] == p) return true;
+
+        return false;
     }
 }
