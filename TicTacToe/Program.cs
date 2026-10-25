@@ -25,6 +25,12 @@ class Program
                 Console.WriteLine($"Победил игрок {currentPlayer}!");
                 break;
             }
+                        if (IsDraw())
+            {
+                PrintBoard();
+                Console.WriteLine("Ничья!");
+                break;
+            }
 
             currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
         }
@@ -49,17 +55,13 @@ class Program
     {
         for (int i = 0; i < 3; i++)
         {
-            // i-я строка целиком
             if (board[i, 0] == p && board[i, 1] == p && board[i, 2] == p) return true;
 
-            // i-й столбец целиком
             if (board[0, i] == p && board[1, i] == p && board[2, i] == p) return true;
         }
 
-        // Главная диагональ (сверху-слева вниз-вправо)
         if (board[0, 0] == p && board[1, 1] == p && board[2, 2] == p) return true;
 
-        // Побочная диагональ (сверху-справа вниз-влево)
         if (board[0, 2] == p && board[1, 1] == p && board[2, 0] == p) return true;
 
         return false;
@@ -117,5 +119,14 @@ class Program
         if (board[0, 2] == p && board[1, 1] == p && board[2, 0] == p) return true;
 
         return false;
+    }
+    static bool IsDraw()
+    {
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 3; c++)
+                if (board[r, c] == ' ')
+                    return false; 
+
+        return true; 
     }
 }
