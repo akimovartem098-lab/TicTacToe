@@ -4,19 +4,23 @@ class Program
 {
     static char[,] board = new char[3, 3];
 
-        static void Main()
+           static void Main()
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         InitBoard();
-        PrintBoard();
 
-        var (row1, col1) = ReadMove();
-        board[row1, col1] = 'X';
-        PrintBoard();
+        char currentPlayer = 'X';
 
-        var (row2, col2) = ReadMove();
-        board[row2, col2] = 'O';
-        PrintBoard();
+        while (true)
+        {
+            PrintBoard();
+            Console.WriteLine($"Ход игрока {currentPlayer}");
+
+            var (row, col) = ReadMove();
+            board[row, col] = currentPlayer;
+
+            currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
+        }
     }
     static (int row, int col) ReadMove()
     {
